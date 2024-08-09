@@ -12,6 +12,7 @@ import CannonDebugger from "cannon-es-debugger";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 // import CannonUtils from "cannon-utils";
 import { HighlightedArea } from "../meshes/HighiltedArea";
+import { PointerLockControls } from "three/examples/jsm/Addons.js";
 
 function setupLights() {
     // createLight(
@@ -136,21 +137,32 @@ function setupControllers() {
     Global.camera = new THREE.PerspectiveCamera(
         90,
         Global.container.clientWidth / Global.container.clientHeight,
-        0.1,
+        0.001,
         1000
     );
     Global.keyboardController = new KeyboardController();
     Global.mouseController = new MouseController();
     Global.cameraController = new CameraController(Global.camera);
+    Global.lockController = new PointerLockControls(
+        Global.camera,
+        Global.renderer.domElement
+    );
 }
 
 function setupWindowEvents() {
     Global.container.addEventListener("contextmenu", event => {
         event.preventDefault();
     });
-    Global.container.addEventListener("click", () => {
-        Global.container.requestPointerLock();
-    });
+    // addEventListener(
+    //     "beforeunload",
+    //     function(e) {
+    //         e.stopPropagation();
+    //         e.preventDefault();
+    //         return false;
+    //     },
+    //     true
+    // );
+
     window.addEventListener("resize", () => {
         Global.camera.aspect = window.innerWidth / window.innerHeight;
         Global.camera.updateProjectionMatrix();

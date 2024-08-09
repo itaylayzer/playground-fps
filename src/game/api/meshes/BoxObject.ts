@@ -2,6 +2,9 @@ import { PhysicsObject } from "../../physics/PhysicsMesh";
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import { Global } from "../../store/Global";
+
+
+
 export class BoxObject extends PhysicsObject {
     constructor(
         size: number,
@@ -22,7 +25,7 @@ export class BoxObject extends PhysicsObject {
             position,
             material: new CANNON.Material({ friction: 0, restitution: 0 }),
             linearDamping: 0.9,
-            angularDamping: 0.9,
+            angularDamping: 0.999,
             collisionFilterGroup: 2,
             collisionFilterMask: ~0
         });

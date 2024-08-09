@@ -8,6 +8,7 @@ import CannonDebugger from "cannon-es-debugger";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import { loadedAssets } from "@/src/viewmodels/useAssetLoader";
 import { Action } from "@/src/hooks/useDestroy";
+import { PointerLockControls } from "three/examples/jsm/Addons.js";
 
 export class Global {
     public static keyboardController: KeyboardController;
@@ -23,4 +24,5 @@ export class Global {
     public static stats: Stats;
     public static assets: loadedAssets;
     public static updates: Action[];
+    public static lockController: PointerLockControls;
 }

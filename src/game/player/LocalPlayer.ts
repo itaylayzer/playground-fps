@@ -4,6 +4,7 @@ import { ShooterController } from "../controller/ShooterController";
 import { Global } from "../store/Global";
 import { Player } from "./Player";
 import { PlayerModel } from "./PlayerModel";
+import { ThrowController } from "../controller/ThrowController";
 
 export class LocalPlayer extends Player {
     constructor() {
@@ -14,13 +15,12 @@ export class LocalPlayer extends Player {
         const shooterController = new ShooterController({
             collisionFilterGroup: 2,
             collisionFilterMask: ~1,
-            shootForce: 50,
-            deltaTime: 150
+            shootForce: 250,
+            deltaTime: 125
         });
+        const throwController = new ThrowController(this);
 
         const model = new PlayerModel(this);
-
-        // Global.assets.fbx.rigged.position = 10;
 
         const update = () => {
             Global.cameraController.updateMouseMovement(
@@ -29,11 +29,13 @@ export class LocalPlayer extends Player {
             );
             movementController.update(group);
 
-            // .add(new THREE.Vector3(0, 1, 0));
             Global.cameraController.update();
 
             if (Global.mouseController.isMousePressed(0))
                 shooterController.shoot();
+            if (Global.keyboardController.isKeyUp("KeyE")) {
+                throwController.throw();
+            }
 
             shooterController.update();
 

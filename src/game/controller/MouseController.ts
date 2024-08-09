@@ -1,3 +1,5 @@
+import { Global } from "../store/Global";
+
 export class MouseController {
     private _movement: [number, number];
     private mousePressed: Set<number>;
@@ -29,6 +31,7 @@ export class MouseController {
     }
 
     private onMouseDown(event: MouseEvent) {
+        Global.lockController.lock();
         this.mouseDown.add(event.button);
     }
     private onMouseUp(event: MouseEvent) {

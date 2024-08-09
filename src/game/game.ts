@@ -34,6 +34,6 @@ export default (assets: loadedAssets) => {
     return {
         destroyer: () => {
             // while (Global.container.firstChild) Global.container.removeChild(Global.container.firstChild);
-        },
+        }
     };
 };

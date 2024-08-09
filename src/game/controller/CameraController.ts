@@ -19,14 +19,22 @@ export class CameraController {
         this.mouseMovement.x = 0;
         this.mouseMovement.y = 0;
 
-        this.camera.quaternion.setFromEuler(new THREE.Euler(this.rotation.y * THREE.MathUtils.DEG2RAD, 0, 0));
+        this.camera.quaternion.setFromEuler(
+            new THREE.Euler(this.rotation.y * THREE.MathUtils.DEG2RAD, 0, 0)
+        );
         const cameraUp = new THREE.Vector3(0, 1, 0);
-        this.camera.rotateOnWorldAxis(cameraUp, this.rotation.x * THREE.MathUtils.DEG2RAD + Math.PI);
+        this.camera.rotateOnWorldAxis(
+            cameraUp,
+            this.rotation.x * THREE.MathUtils.DEG2RAD + Math.PI
+        );
 
         this.mouseMovement.set(0, 0);
     }
 
     public updateMouseMovement(movementX: number, movementY: number) {
-        this.mouseMovement = new THREE.Vector2(movementX, movementY).multiplyScalar((-2 * CameraController.sensitivity) / 10);
+        this.mouseMovement = new THREE.Vector2(
+            movementX,
+            movementY
+        ).multiplyScalar(-2 * CameraController.sensitivity / 10);
     }
 }

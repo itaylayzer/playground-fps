@@ -23,6 +23,7 @@ export class Platform extends PhysicsObject {
             mass: 0,
             position,
             material: new CANNON.Material({ friction: 0, restitution: 0 }),
+            collisionFilterGroup: 2
         });
 
         mesh.position.copy(position);

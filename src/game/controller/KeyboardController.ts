@@ -11,15 +11,24 @@ export class KeyboardController {
     }
 
     public enable() {
-        window.addEventListener('keydown', this.onKeyDown.bind(this));
-        window.addEventListener('keyup', this.onKeyUp.bind(this));
+        window.addEventListener("keydown", this.onKeyDown.bind(this));
+        window.addEventListener("keyup", this.onKeyUp.bind(this));
     }
     public disable() {
-        window.removeEventListener('keydown', this.onKeyDown.bind(this));
-        window.removeEventListener('keyup', this.onKeyUp.bind(this));
+        window.removeEventListener("keydown", this.onKeyDown.bind(this));
+        window.removeEventListener("keyup", this.onKeyUp.bind(this));
     }
 
     private onKeyDown(event: KeyboardEvent) {
+        // Prevent the default action for Ctrl + W
+        if (event.ctrlKey && event.key === "w") {
+            event.preventDefault();
+        }
+
+        // Prevent the default action for Ctrl + Tab
+        if (event.ctrlKey && event.key === "Tab") {
+            event.preventDefault();
+        }
         this.keysDown.add(event.code);
     }
 
@@ -48,6 +57,5 @@ export class KeyboardController {
             this.keysPressed.delete(down);
         }
         this.keysUp.clear();
-
     }
 }
