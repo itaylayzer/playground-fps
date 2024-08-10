@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Global } from "../store/Global";
+import { degToRad, lerp } from "three/src/math/MathUtils.js";
 
 function explodeFn(t: number) {
     return t < Math.PI * 4
@@ -16,6 +17,7 @@ export class CameraController {
     public rotation: THREE.Vector2;
     public mouseMovement: THREE.Vector2;
     public static sensitivity: number = 50;
+    public side = 0;
 
     private time: number;
     private forceRotation: THREE.Vector3;
@@ -49,6 +51,13 @@ export class CameraController {
         this.camera.rotation.z += this.forceRotation.z * explodeFn(this.time);
         this.camera.rotation.x += this.forceRotation.x * explodeFn(this.time);
         this.camera.rotation.y += this.forceRotation.y * explodeFn(this.time);
+        this.camera.rotation.z += this.side = lerp(
+            this.side,
+            (-Global.keyboardController.isKeyPressed("KeyE") +
+                +Global.keyboardController.isKeyPressed("KeyQ")) *
+                degToRad(15),
+            Global.deltaTime * 7
+        );
     }
 
     public updateMouseMovement(movementX: number, movementY: number) {

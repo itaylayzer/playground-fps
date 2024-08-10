@@ -8,7 +8,7 @@ import { A_P_Blender, A_P_Single } from "../animations/lib/A_Vertex_Params";
 import { A_Conditions } from "../animations/lib/types";
 import { getHigherBodyBones } from "../api/animations/seperateBones";
 import { removesBonesFromClip } from "../api/animations/removeBonesFromClip";
-import { degToRad } from "three/src/math/MathUtils.js";
+import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
 
 export class PlayerModel {
     public update: (onJump: boolean, grounded: boolean) => void;
@@ -108,11 +108,11 @@ export class PlayerModel {
             };
 
             const higherConditions: A_Conditions = {
-                d: _ => Global.keyboardController.isKeyDown("KeyE"),
+                d: _ => Global.keyboardController.isKeyDown("KeyF"),
                 e: clip => {
                     return clip.getTime() >= clip.getDuration();
                 },
-                u: Global.keyboardController.isKeyUp("KeyE")
+                u: Global.keyboardController.isKeyUp("KeyF")
             };
 
             const isWalking =
@@ -128,14 +128,17 @@ export class PlayerModel {
             );
 
             spine.rotation.x = degToRad(-Global.cameraController.rotation.y);
+            spine.rotation.y = Global.cameraController.side * 2;
 
             Global.camera.position
                 .copy(nose.getWorldPosition(new THREE.Vector3()))
                 .add(body.quaternion.vmult(new CANNON.Vec3(0, 0, 0)))
                 .add(
-                    new THREE.Vector3(0, 0, 0).applyQuaternion(
-                        Global.camera.quaternion
-                    )
+                    new THREE.Vector3(
+                        -Global.cameraController.side * 2,
+                        0,
+                        0
+                    ).applyQuaternion(Global.camera.quaternion)
                 );
         };
 

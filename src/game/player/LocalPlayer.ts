@@ -37,7 +37,7 @@ export class LocalPlayer extends Player {
 
             if (Global.mouseController.isMousePressed(0))
                 shooterController.shoot();
-            if (Global.keyboardController.isKeyUp("KeyE")) {
+            if (Global.keyboardController.isKeyUp("KeyF")) {
                 throwController.throw();
             }
 
