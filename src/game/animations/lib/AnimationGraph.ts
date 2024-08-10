@@ -9,7 +9,10 @@ export class AnimationGraph<T extends A_Conditions> {
     public current: number;
     public mixer: THREE.AnimationMixer;
 
-    constructor(skinnedMesh: THREE.SkinnedMesh) {
+    constructor(
+        skinnedMesh: THREE.SkinnedMesh,
+        private useLerp: boolean = false
+    ) {
         this.current = 0;
         this.vertecies = [];
         this.mixer = new THREE.AnimationMixer(skinnedMesh);
@@ -25,7 +28,7 @@ export class AnimationGraph<T extends A_Conditions> {
         }
 
         for (const v of this.vertecies) {
-            v.update(values);
+            v.update(values, this.useLerp);
         }
 
         this.mixer.update(Global.deltaTime);

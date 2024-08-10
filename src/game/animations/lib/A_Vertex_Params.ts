@@ -22,12 +22,22 @@ export class A_P_Blender extends A_V_Params {
 export class A_P_Single extends A_V_Params {
     constructor(
         private clip: AnimationClip,
-        private startOverOnFadeIn: boolean = true
+        private startOverOnFadeIn: boolean = true,
+        private start: number = 0,
+        private end: number | undefined = undefined,
+        private loop: boolean = true
     ) {
         super();
     }
 
     build(mixer: AnimationMixer): A_Vertex {
-        return new A_V_Single(mixer, this.clip, this.startOverOnFadeIn);
+        return new A_V_Single(
+            mixer,
+            this.clip,
+            this.startOverOnFadeIn,
+            this.start,
+            this.end,
+            this.loop
+        );
     }
 }

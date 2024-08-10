@@ -5,12 +5,7 @@ import { Global } from "../../store/Global";
 
 export class A_V_Blender extends A_Vertex {
     private masterWeight: number;
-    constructor(
-        mixer: AnimationMixer,
-        
-        clips: AnimationClip[],
-        key: string
-    ) {
+    constructor(mixer: AnimationMixer, clips: AnimationClip[], key: string) {
         super();
         this.masterWeight = 0;
 
@@ -19,6 +14,8 @@ export class A_V_Blender extends A_Vertex {
         for (const [actionIndex, action] of actions.entries()) {
             action.play();
             action.setEffectiveWeight(+(actionIndex == 0));
+            // @ts-ignore
+            console.log("action._iterpolants", action._iterpolants);
         }
 
         this.innerUpdate = values => {

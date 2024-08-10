@@ -58,7 +58,6 @@ export class CameraController {
         ).multiplyScalar(-2 * CameraController.sensitivity / 10);
     }
     shake(distance: number) {
-        if (this.time <= Math.PI * 4) return;
         this.time = 0; //0.93656;
         this.forceRotation.z = randomSign() / (distance * distance);
         this.forceRotation.x = randomSign() / distance;

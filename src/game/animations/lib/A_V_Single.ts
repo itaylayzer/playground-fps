@@ -1,4 +1,10 @@
-import { AnimationAction, AnimationClip, AnimationMixer } from "three";
+import {
+    AnimationAction,
+    AnimationClip,
+    AnimationMixer,
+    LoopOnce,
+    LoopRepeat
+} from "three";
 import { A_Vertex } from "./A_Vertex";
 
 export class A_V_Single extends A_Vertex {
@@ -6,13 +12,24 @@ export class A_V_Single extends A_Vertex {
     constructor(
         mixer: AnimationMixer,
         clip: AnimationClip,
-        startOverOnFadeIn: boolean = true
+        startOverOnFadeIn: boolean = true,
+        private start: number = 0,
+        private end: number | undefined = undefined,
+        loop: boolean = true
     ) {
         super();
         this.action = mixer.clipAction(clip);
         this.action.play();
+        this.action.loop = loop ? LoopRepeat : LoopOnce;
         this.onFadeIn = () => {
-            startOverOnFadeIn && (this.action.time = 0);
+            startOverOnFadeIn && (this.action.time = this.start);
+        };
+
+        this.innerUpdate = () => {
+            if (this.end && this.action.time > this.end) {
+                if (loop) this.action.time = this.start;
+                else this.action.paused = true;
+            }
         };
     }
     protected anim_setEffectiveWeight(weight: number): void {
@@ -20,9 +37,11 @@ export class A_V_Single extends A_Vertex {
     }
 
     public getDuration(): number {
-        return this.action.getClip().duration;
+        return this.end === undefined
+            ? this.action.getClip().duration - this.start
+            : this.end - this.start;
     }
     public getTime(): number {
-        return this.action.time;
+        return this.action.time - this.start;
     }
 }

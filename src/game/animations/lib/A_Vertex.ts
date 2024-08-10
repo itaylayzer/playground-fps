@@ -1,4 +1,6 @@
+import { lerp } from "three/src/math/MathUtils.js";
 import { A_Edge } from "./A_Edge";
+import { Global } from "../../store/Global";
 
 export abstract class A_Vertex {
     public edges: Map<number, A_Edge>;
@@ -25,8 +27,12 @@ export abstract class A_Vertex {
     public setWeight(w: number) {
         this.weight = this.lerpedWeight = w;
     }
-    public update(values: Record<string, any>) {
-        this.anim_setEffectiveWeight((this.lerpedWeight = this.weight));
+    public update(values: Record<string, any>, useLerp: boolean) {
+        this.anim_setEffectiveWeight(
+            (this.lerpedWeight = useLerp
+                ? lerp(this.lerpedWeight, this.weight, Global.deltaTime * 7)
+                : this.weight)
+        );
         this.innerUpdate && this.innerUpdate(values);
     }
 

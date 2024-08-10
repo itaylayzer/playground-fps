@@ -40,6 +40,7 @@ class ThrowBomb extends PhysicsObject {
         Global.scene.remove(shpere);
         Global.world.removeBody(this);
 
+        let playerDistance = 0;
         Global.world.bodies.forEach(body => {
             // add force here
             if (body.id == this.id) return;
@@ -54,14 +55,17 @@ class ThrowBomb extends PhysicsObject {
                 const forceMagnitude = explosionForce / distance; // Decrease force with distance
 
                 if (body.collisionFilterGroup === 1) {
-                    Global.cameraController.shake(distance);
+                    playerDistance = distance;
                     return;
                 }
-
                 const force = directionToBody.scale(forceMagnitude);
                 body.applyForce(force);
             }
         });
+
+        if (playerDistance > 0) {
+            Global.cameraController.shake(playerDistance);
+        }
     }
 }
 
