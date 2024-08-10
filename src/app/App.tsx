@@ -125,7 +125,7 @@ const styles = useStyles({
 
 export default () => (
     <AssetLoader items={{
-            rigged:"fbx/models/rigged-eyes-nose.fbx",
+            rigged:"fbx/models/rigged-no-head-a.fbx",
             walk:"fbx/animations/full/Rifle Run.fbx",
             idle:"fbx/animations/full/Rifle Aiming Idle.fbx",
             fire:"fbx/animations/full/Firing Rifle.fbx",
@@ -134,7 +134,8 @@ export default () => (
             throw:"fbx/animations/full/Toss Grenade.fbx",
             jup:"fbx/animations/full/Jump Up.fbx",
             jdown:"fbx/animations/full/Jump Down.fbx",
-            jloop:"fbx/animations/full/Jump Loop.fbx"
+            jloop:"fbx/animations/full/Jump Loop.fbx",
+            bomb:"fbx/models/fbomb.fbx"
         }}>
         <App />
     </AssetLoader>

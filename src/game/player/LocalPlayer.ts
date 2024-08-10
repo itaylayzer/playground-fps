@@ -18,9 +18,13 @@ export class LocalPlayer extends Player {
             shootForce: 250,
             deltaTime: 125
         });
-        const throwController = new ThrowController(this);
 
         const model = new PlayerModel(this);
+
+        const throwController = new ThrowController(
+            this,
+            model.getBone("mixamorigRightHand")!
+        );
 
         const update = () => {
             Global.cameraController.updateMouseMovement(

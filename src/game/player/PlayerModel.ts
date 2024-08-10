@@ -12,7 +12,7 @@ import { degToRad } from "three/src/math/MathUtils.js";
 
 export class PlayerModel {
     public update: (onJump: boolean, grounded: boolean) => void;
-
+    public getBone: (name: string) => THREE.Bone | undefined;
     constructor(body: CANNON.Body) {
         const mesh = clone(Global.assets.fbx.rigged);
         const skinnedMesh = mesh.children[1] as THREE.SkinnedMesh;
@@ -35,6 +35,8 @@ export class PlayerModel {
                 "movement"
             )
         );
+
+        this.getBone = name => skinnedMesh.skeleton.getBoneByName(name);
 
         lgraph.addVertex(new A_P_Single(Global.assets.fbx.jup.animations[0]));
         lgraph.addVertex(new A_P_Single(Global.assets.fbx.jloop.animations[0]));
@@ -72,15 +74,12 @@ export class PlayerModel {
             )
         ); // 0
 
-        hgraph.addVertex(new A_P_Single(throwClip, true, 0, 0)); // 1
-        hgraph.addVertex(new A_P_Single(throwClip, true, 0, 0)); // 2
-        hgraph.addVertex(new A_P_Single(throwClip, true, 1.8, 2.3)); // 3
+        // hgraph.addVertex(new A_P_Single(throwClip, true, 0, 1.8));
+        hgraph.addVertex(new A_P_Single(throwClip, true, 1.8, 2.3));
 
-        hgraph.join(0, 1, "t1");
-        hgraph.join(1, 2, "t2");
-        hgraph.join(1, 3, "t3");
-        hgraph.join(2, 3, "t3");
-        hgraph.join(3, 0, "t2");
+        hgraph.join(0, 1, "u");
+        hgraph.join(1, 0, "e");
+        hgraph.join(1, 1, "u");
 
         hgraph.start();
 
@@ -109,11 +108,11 @@ export class PlayerModel {
             };
 
             const higherConditions: A_Conditions = {
-                t1: _ => Global.keyboardController.isKeyDown("KeyE"),
-                t2: clip =>
-                    Global.keyboardController.isKeyDown("KeyE") ||
-                    clip.getTime() >= clip.getDuration() - Global.deltaTime * 5,
-                t3: Global.keyboardController.isKeyUp("KeyE")
+                d: _ => Global.keyboardController.isKeyDown("KeyE"),
+                e: clip => {
+                    return clip.getTime() >= clip.getDuration();
+                },
+                u: Global.keyboardController.isKeyUp("KeyE")
             };
 
             const isWalking =
@@ -134,7 +133,7 @@ export class PlayerModel {
                 .copy(nose.getWorldPosition(new THREE.Vector3()))
                 .add(body.quaternion.vmult(new CANNON.Vec3(0, 0, 0)))
                 .add(
-                    new THREE.Vector3(0.4, 0, 1).applyQuaternion(
+                    new THREE.Vector3(0, 0, 0).applyQuaternion(
                         Global.camera.quaternion
                     )
                 );

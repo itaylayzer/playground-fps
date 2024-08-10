@@ -22,13 +22,18 @@ export class A_V_Single extends A_Vertex {
         this.action.play();
         this.action.loop = loop ? LoopRepeat : LoopOnce;
         this.onFadeIn = () => {
-            startOverOnFadeIn && (this.action.time = this.start);
+            if (startOverOnFadeIn) {
+                this.action.time = this.start;
+                if (!loop) {
+                    this.action.play();
+                }
+            }
         };
 
         this.innerUpdate = () => {
             if (this.end && this.action.time > this.end) {
                 if (loop) this.action.time = this.start;
-                else this.action.paused = true;
+                else this.action.stop();
             }
         };
     }

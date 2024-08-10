@@ -6,10 +6,13 @@ import * as THREE from "three";
 class ThrowBomb extends PhysicsObject {
     constructor(position: CANNON.Vec3, direction: CANNON.Vec3) {
         direction.scale(-30, direction);
-        const shpere = new THREE.Mesh(
-            new THREE.SphereGeometry(0.5, 6, 6),
-            new THREE.MeshPhongMaterial({ color: "brown" })
-        );
+        const shpere = Global.assets.fbx.bomb.clone();
+        shpere.scale.multiplyScalar(0.0005);
+
+        // new THREE.Mesh(
+        // new THREE.SphereGeometry(0.5, 6, 6),
+        // new THREE.MeshPhongMaterial({ color: "brown" })
+        // );
         super(shpere, {
             position,
             velocity: direction,
@@ -36,7 +39,7 @@ class ThrowBomb extends PhysicsObject {
             }, 1000);
         });
     }
-    public explode(shpere: THREE.Mesh) {
+    public explode(shpere: THREE.Group) {
         Global.scene.remove(shpere);
         Global.world.removeBody(this);
 
@@ -71,10 +74,13 @@ class ThrowBomb extends PhysicsObject {
 
 export class ThrowController {
     public throw: () => void;
-    constructor(body: CANNON.Body) {
+    constructor(body: CANNON.Body, bone: THREE.Bone) {
         this.throw = () => {
             new ThrowBomb(
-                body.position,
+                new CANNON.Vec3().copy(
+                    // @ts-ignore
+                    bone.getWorldPosition(new THREE.Vector3())
+                ),
                 new CANNON.Quaternion()
                     .set(
                         Global.camera.quaternion.x,

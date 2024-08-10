@@ -45,7 +45,7 @@ export class PhysicsObject<T extends THREE.Object3D = THREE.Object3D> extends CA
         PhysicsObject.childrens.push(this);
         this.update = [
             () => {
-                object3d.position.copy(this.position.vadd(this.offsets.position));
+                object3d.position.copy(this.position.clone().vadd(this.offsets.position));
                 object3d.quaternion.copy(this.quaternion);
             },
         ];
