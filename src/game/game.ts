@@ -10,7 +10,7 @@ export default (assets: loadedAssets) => {
 
     setupWorld();
 
-    new LocalPlayer();
+    Global.localPlayer = new LocalPlayer();
 
     const clock = new Clock();
 

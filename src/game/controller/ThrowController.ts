@@ -42,7 +42,8 @@ class ThrowBomb extends PhysicsObject {
 
         Global.world.bodies.forEach(body => {
             // add force here
-            if (body.id == this.id || body.collisionFilterGroup === 1) return;
+            if (body.id == this.id) return;
+
             const explosionForce = 300000; // Adjust the force magnitude as needed
             const directionToBody = new CANNON.Vec3().copy(body.position);
             directionToBody.vsub(this.position, directionToBody);
@@ -51,6 +52,12 @@ class ThrowBomb extends PhysicsObject {
 
             if (distance > 0) {
                 const forceMagnitude = explosionForce / distance; // Decrease force with distance
+
+                if (body.collisionFilterGroup === 1) {
+                    Global.cameraController.shake(distance);
+                    return;
+                }
+
                 const force = directionToBody.scale(forceMagnitude);
                 body.applyForce(force);
             }
