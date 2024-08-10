@@ -15,7 +15,7 @@ export class CameraController {
 
     public update() {
         this.rotation.add(this.mouseMovement.multiplyScalar(1));
-        this.rotation.y = Math.max(Math.min(this.rotation.y, 90), -90);
+        this.rotation.y = Math.max(Math.min(this.rotation.y, 70), -70);
         this.mouseMovement.x = 0;
         this.mouseMovement.y = 0;
 

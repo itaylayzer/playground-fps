@@ -39,7 +39,10 @@ export class LocalPlayer extends Player {
 
             shooterController.update();
 
-            model.update();
+            model.update(
+                movementController.jumped,
+                movementController.onGroundController.onGround
+            );
         };
 
         this.update.push(update);

@@ -11,7 +11,9 @@ const LERPED_AXIS = 1;
 
 export class MovementController {
     private keysAxis: [[number, number], [number, number]];
-    private onGroundController: OnGroundController;
+    public onGroundController: OnGroundController;
+    public jumped: boolean = false;
+
     constructor(private speed: number = 1, private body: CANNON.Body) {
         this.onGroundController = new OnGroundController(this.body);
 
@@ -19,6 +21,7 @@ export class MovementController {
     }
 
     update(group: THREE.Group) {
+        this.jumped = false;
         const onGround = this.onGroundController.onGround;
         // const airControl = 0.01;
 
@@ -27,7 +30,7 @@ export class MovementController {
                 Global.keyboardController.isKeyDown("Space")) &&
             onGround
         ) {
-            onGround && (this.body.velocity.y = 11);
+            onGround && ((this.body.velocity.y = 11), (this.jumped = true));
             this.onGroundController.off();
         }
 

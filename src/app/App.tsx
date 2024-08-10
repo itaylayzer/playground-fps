@@ -131,7 +131,10 @@ export default () => (
             fire:"fbx/Firing Rifle.fbx",
             firewalk:"fbx/Firing Rifle (1).fbx",
             rifle:"fbx/connected-rifle.fbx",
-            throw:"fbx/Toss Grenade.fbx"
+            throw:"fbx/Toss Grenade.fbx",
+            jup:"fbx/Jump Up.fbx",
+            jdown:"fbx/Jump Down.fbx",
+            jloop:"fbx/Jump Loop.fbx"
         }}>
         <App />
     </AssetLoader>

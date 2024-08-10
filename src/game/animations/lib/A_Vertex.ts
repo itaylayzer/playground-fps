@@ -1,0 +1,41 @@
+import { A_Edge } from "./A_Edge";
+
+export abstract class A_Vertex {
+    public edges: Map<number, A_Edge>;
+    private lerpedWeight: number;
+    protected innerUpdate:
+        | ((obj: Record<string, any>) => void)
+        | undefined = undefined;
+
+    protected onFadeIn: (() => void) | undefined = undefined;
+    protected onFadeOut: (() => void) | undefined = undefined;
+    constructor(protected weight: number = 0) {
+        this.lerpedWeight = weight;
+        this.edges = new Map();
+    }
+    public fadeOut() {
+        this.onFadeOut && this.onFadeOut();
+
+        this.weight = 0;
+    }
+    public fadeIn() {
+        this.onFadeIn && this.onFadeIn();
+        this.weight = 1;
+    }
+    public setWeight(w: number) {
+        this.weight = this.lerpedWeight = w;
+    }
+    public update(values: Record<string, any>) {
+        this.anim_setEffectiveWeight((this.lerpedWeight = this.weight));
+        this.innerUpdate && this.innerUpdate(values);
+    }
+
+    public getDuration(): number {
+        throw new Error("Method not implemented.");
+    }
+    public getTime(): number {
+        throw new Error("Method not implemented.");
+    }
+
+    protected abstract anim_setEffectiveWeight(weight: number): void;
+}
