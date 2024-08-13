@@ -20,15 +20,6 @@ export class KeyboardController {
     }
 
     private onKeyDown(event: KeyboardEvent) {
-        // Prevent the default action for Ctrl + W
-        if (event.ctrlKey && event.key === "w") {
-            event.preventDefault();
-        }
-
-        // Prevent the default action for Ctrl + Tab
-        if (event.ctrlKey && event.key === "Tab") {
-            event.preventDefault();
-        }
         this.keysDown.add(event.code);
     }
 
@@ -53,8 +44,8 @@ export class KeyboardController {
             this.keysPressed.add(down);
         }
         this.keysDown.clear();
-        for (const down of this.keysUp) {
-            this.keysPressed.delete(down);
+        for (const up of this.keysUp) {
+            this.keysPressed.delete(up);
         }
         this.keysUp.clear();
     }

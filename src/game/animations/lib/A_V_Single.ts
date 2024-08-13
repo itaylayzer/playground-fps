@@ -49,4 +49,8 @@ export class A_V_Single extends A_Vertex {
     public getTime(): number {
         return this.action.time - this.start;
     }
+
+    public getAction(): AnimationAction {
+        return this.action;
+    }
 }

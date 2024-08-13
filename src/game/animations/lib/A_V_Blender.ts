@@ -1,40 +1,44 @@
-import { AnimationClip, AnimationMixer } from "three";
+import { AnimationAction, AnimationClip, AnimationMixer } from "three";
 import { A_Vertex } from "./A_Vertex";
-import { lerp } from "three/src/math/MathUtils.js";
+import { inverseLerp as lerp } from "three/src/math/MathUtils.js";
 import { Global } from "../../store/Global";
 
 export class A_V_Blender extends A_Vertex {
-    private masterWeight: number;
-    constructor(mixer: AnimationMixer, clips: AnimationClip[], key: string) {
-        super();
-        this.masterWeight = 0;
+  private masterWeight: number;
+  private index: number;
+  private actions: AnimationAction[];
+  constructor(mixer: AnimationMixer, clips: AnimationClip[], key: string) {
+    super();
+    this.masterWeight = 0;
 
-        const actions = clips.map(clip => mixer.clipAction(clip));
-        const weights = actions.map(_ => 0);
-        for (const [actionIndex, action] of actions.entries()) {
-            action.play();
-            action.setEffectiveWeight(+(actionIndex == 0));
-            // @ts-ignore
-            console.log("action._iterpolants", action._iterpolants);
-        }
-
-        this.innerUpdate = values => {
-            const index = values[key] as number;
-
-            for (const [actionIndex, action] of actions.entries()) {
-                weights[actionIndex] = lerp(
-                    weights[actionIndex],
-                    +(actionIndex == index),
-                    Global.deltaTime * 7
-                );
-                action.setEffectiveWeight(
-                    weights[actionIndex] * this.masterWeight
-                );
-            }
-        };
+    this.actions = clips.map(clip => mixer.clipAction(clip));
+    const weights = this.actions.map(_ => 0);
+    for (const [actionIndex, action] of this.actions.entries()) {
+      action.play();
+      action.setEffectiveWeight(+(actionIndex == 0));
+      // @ts-ignore
+      console.log("action._iterpolants", action._iterpolants);
     }
+    this.index = 0;
 
-    protected anim_setEffectiveWeight(weight: number): void {
-        this.masterWeight = weight;
-    }
+    this.innerUpdate = values => {
+      this.index = values[key] as number;
+
+      for (const [actionIndex, action] of this.actions.entries()) {
+        weights[actionIndex] = lerp(
+          weights[actionIndex],
+          +(actionIndex == this.index),
+          Global.deltaTime * 7
+        );
+        action.setEffectiveWeight(weights[actionIndex] * this.masterWeight);
+      }
+    };
+  }
+
+  protected anim_setEffectiveWeight(weight: number): void {
+    this.masterWeight = weight;
+  }
+  public getAction(): AnimationAction {
+    return this.actions[this.index];
+  }
 }
