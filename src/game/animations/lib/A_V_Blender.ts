@@ -1,6 +1,6 @@
 import { AnimationAction, AnimationClip, AnimationMixer } from "three";
 import { A_Vertex } from "./A_Vertex";
-import { inverseLerp as lerp } from "three/src/math/MathUtils.js";
+import { lerp } from "three/src/math/MathUtils.js";
 import { Global } from "../../store/Global";
 
 export class A_V_Blender extends A_Vertex {

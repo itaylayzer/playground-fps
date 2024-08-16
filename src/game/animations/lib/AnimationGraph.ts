@@ -4,7 +4,10 @@ import { A_Vertex } from "./A_Vertex";
 import { A_V_Params } from "./A_Vertex_Params";
 import { A_Conditions } from "./types";
 import * as THREE from "three";
-export class AnimationGraph<T extends A_Conditions> {
+import { EventTarget } from "./EventTarget";
+export class AnimationGraph<T extends A_Conditions> extends EventTarget<{
+    "fire": number;
+}> {
     public vertecies: A_Vertex[];
     public current: number;
     public mixer: THREE.AnimationMixer;
@@ -13,6 +16,7 @@ export class AnimationGraph<T extends A_Conditions> {
         skinnedMesh: THREE.SkinnedMesh,
         private useLerp: boolean = false
     ) {
+        super();
         this.current = 0;
         this.vertecies = [];
         this.mixer = new THREE.AnimationMixer(skinnedMesh);
@@ -47,5 +51,7 @@ export class AnimationGraph<T extends A_Conditions> {
     public setCurrent(curr: number) {
         this.vertecies[this.current].fadeOut();
         this.vertecies[(this.current = curr)].fadeIn();
+
+        this.callEvents("fire", this.current);
     }
 }

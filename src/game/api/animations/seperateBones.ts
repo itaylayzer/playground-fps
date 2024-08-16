@@ -20,5 +20,10 @@ export function searchBones(originalBone: Bone) {
 
 export function getHigherBodyBones(sk: Group) {
     console.log(sk);
-    return searchBones(sk.children[0].children[0    ] as Bone).map(v => v.name);
+    return [
+        searchBones(sk.children[0].children[0] as Bone),
+        sk.children[0] as Bone
+    ]
+        .flat()
+        .map(v => v.name);
 }

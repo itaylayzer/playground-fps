@@ -4,6 +4,7 @@ import { Global } from "./store/Global";
 import { LocalPlayer } from "./player/LocalPlayer";
 import { PhysicsObject } from "./physics/PhysicsMesh";
 import { Clock } from "three";
+import Nebula from "three-nebula";
 
 export default (assets: loadedAssets) => {
     Global.assets = assets;
@@ -13,9 +14,11 @@ export default (assets: loadedAssets) => {
     Global.localPlayer = new LocalPlayer();
 
     const clock = new Clock();
+    Global.lockController.lock();
 
-    setInterval(() => {
+    const animate = () => {
         Global.deltaTime = clock.getDelta();
+
         Global.updates
             .concat(PhysicsObject.childrens.flatMap(v => v.update))
             .map(fn => fn());
@@ -29,6 +32,10 @@ export default (assets: loadedAssets) => {
         Global.keyboardController.lastUpdate();
 
         Global.stats.update();
+    };
+
+    setInterval(() => {
+        animate();
     }, 1000 / 120);
 
     return {

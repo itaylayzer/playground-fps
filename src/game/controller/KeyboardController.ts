@@ -24,6 +24,7 @@ export class KeyboardController {
     }
 
     private onKeyUp(event: KeyboardEvent) {
+        this.keysPressed.delete(event.code);
         this.keysUp.add(event.code);
     }
 
@@ -44,9 +45,6 @@ export class KeyboardController {
             this.keysPressed.add(down);
         }
         this.keysDown.clear();
-        for (const up of this.keysUp) {
-            this.keysPressed.delete(up);
-        }
         this.keysUp.clear();
     }
 }

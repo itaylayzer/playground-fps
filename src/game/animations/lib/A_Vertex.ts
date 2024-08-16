@@ -1,4 +1,4 @@
-import { inverseLerp as lerp } from "three/src/math/MathUtils.js";
+import { lerp } from "three/src/math/MathUtils.js";
 import { A_Edge } from "./A_Edge";
 import { Global } from "../../store/Global";
 import { AnimationAction } from "three";
