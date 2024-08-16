@@ -4,15 +4,16 @@ import { Global } from "./store/Global";
 import { LocalPlayer } from "./player/LocalPlayer";
 import { PhysicsObject } from "./physics/PhysicsMesh";
 import * as THREE from "three";
-import System from "three-nebula";
-
+import System, { SpriteRenderer } from "three-nebula";
 
 export default (assets: loadedAssets) => {
     Global.assets = assets;
 
     setupWorld();
 
+    const renderer = new SpriteRenderer(Global.scene, THREE);
     Global.system = new System();
+    Global.system.addRenderer(renderer);
 
     Global.localPlayer = new LocalPlayer();
 

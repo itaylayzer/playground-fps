@@ -16,15 +16,12 @@ import {
     Alpha,
     Scale,
     Color,
-    SpriteRenderer,
+    
     RadialVelocity,
     ease,
     ColorSpan,
-    BodySprite,
     Force,
-    SphereZone,
-    Texture,
-    VectorVelocity
+    Texture
 } from "three-nebula";
 
 class ThrowBomb extends PhysicsObject {
@@ -67,7 +64,7 @@ class ThrowBomb extends PhysicsObject {
         this.exploded = true;
         Global.audioManager.playAt(
             "exp",
-            this.position.distanceTo(LocalPlayer.getInstance().position)
+            Math.sqrt(this.position.distanceTo(LocalPlayer.getInstance().position))
         );
         Global.scene.remove(shpere);
         Global.world.removeBody(this);
@@ -100,9 +97,7 @@ class ThrowBomb extends PhysicsObject {
         }
 
         const emitter = new Emitter();
-        const renderer = new SpriteRenderer(Global.scene, THREE);
 
-        // Set emitter rate (particles per second) as well as the particle initializers and behaviours
         emitter
             .setLife(1)
             .setRate(new Rate(new Span(150, 150), new Span(1)))
@@ -150,8 +145,7 @@ class ThrowBomb extends PhysicsObject {
             ])
             .emit(1);
 
-        // add the emitter and a renderer to your particle system
-        Global.system.addEmitter(emitter).addRenderer(renderer);
+        Global.system.addEmitter(emitter);
     }
 }
 

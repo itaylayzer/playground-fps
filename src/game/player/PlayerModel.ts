@@ -11,6 +11,23 @@ import { removesBonesFromClip } from "../api/animations/removeBonesFromClip";
 import { degToRad, lerp } from "three/src/math/MathUtils.js";
 import clamp from "../api/clamp";
 import { fitWeaponToHands } from "../api/animations/fitWeaponsToHands";
+import {
+    Alpha,
+    ease,
+    Emitter,
+    Life,
+    Position,
+    RadialVelocity,
+    Radius,
+    Rate,
+    Scale,
+    Span,
+    Vector3D,
+    SphereZone,
+    Texture,
+    Color,
+    ColorSpan
+} from "three-nebula";
 
 export class PlayerModel {
     public update: (
@@ -184,6 +201,100 @@ export class PlayerModel {
                 skinnedMesh.skeleton.getBoneByName("mixamorigLeftHand")!,
                 skinnedMesh.skeleton.getBoneByName("mixamorigRightHand")!
             );
+
+            if (onShooting) {
+                const rifleDirection = rifle.getWorldDirection(
+                    new THREE.Vector3()
+                );
+                // const upRight = new THREE.Vector3(-0.5, 1, 0)
+                // .applyQuaternion(rifle.quaternion)
+                // .multiplyScalar(5);
+                {
+                    const emitter = new Emitter();
+
+                    emitter
+                        .setLife(1)
+                        .setRate(new Rate(new Span(5, 5), new Span(1)))
+                        .setPosition(
+                            rifle.position
+                                .clone()
+                                .add(rifleDirection.clone().multiplyScalar(0.8))
+                        )
+                        .setInitializers([
+                            new Position(new SphereZone(0, 0, 0, 0.1)),
+                            new Radius(0.1, 0.5),
+                            new Life(
+                                // @ts-ignore
+                                new Span(0.1)
+                            ),
+                            new RadialVelocity(
+                                10,
+                                new Vector3D(
+                                    rifleDirection.x,
+                                    rifleDirection.y,
+                                    rifleDirection.z
+                                ),
+                                10
+                            ),
+                            new Texture(
+                                THREE,
+                                Global.assets.textures.txt_circle,
+                                {
+                                    blending: "AdditiveBlending"
+                                }
+                            )
+                        ])
+                        .setBehaviours([
+                            new Alpha(1, 0.1, undefined, ease.easeInExpo),
+                            new Scale(1, 0.1, undefined, ease.easeInCubic),
+                            // @ts-ignore
+
+                            new Color(
+                                // @ts-ignore
+                                new ColorSpan(["#ffffff", "#ffffff", "#d9760d"])
+                            )
+                        ])
+                        .emit(1);
+
+                    // add the emitter and a renderer to your particle system
+                    Global.system.addEmitter(emitter);
+                }
+                // {
+                //     const emitter = new Emitter();
+
+                //     emitter
+                //         .setLife(2)
+                //         .setRate(new Rate(new Span(1), new Span(1)))
+                //         .setPosition(rifle.position.clone())
+                //         .setInitializers([
+                //             new Position(new SphereZone(0, 0, 0, 0.1)),
+                //             new Radius(0.05),
+                //             new Life(2),
+                //             new VectorVelocity(
+                //                 new Vector3D(upRight.x, upRight.y, upRight.z),
+                //                 10
+                //             ),
+                //             new Texture(
+                //                 THREE,
+                //                 Global.assets.textures.txt_circle
+                //             )
+                //         ])
+                //         .setBehaviours([
+                //             new Alpha(1, 0.1, undefined, ease.easeInExpo),
+                //             new Scale(1, 0.1, undefined, ease.easeInCubic),
+                //             new Gravity(0.8),
+                //             // @ts-ignore
+                //             new Color(
+                //                 // @ts-ignore
+                //                 new ColorSpan(["#d9760d"])
+                //             )
+                //         ])
+                //         .emit(1);
+
+                //     // add the emitter and a renderer to your particle system
+                //     Global.system.addEmitter(emitter);
+                // }
+            }
         };
 
         Global.scene.add(mesh);
