@@ -31,7 +31,6 @@ export class PlayerModel {
         mesh.scale.copy(new THREE.Vector3(0.004, 0.004, 0.004));
 
         const higherBones = getHigherBodyBones(mesh.children[0] as THREE.Group);
-        console.log("higherBones", higherBones);
         const lgraph = new AnimationGraph(skinnedMesh);
 
         lgraph.addVertex(

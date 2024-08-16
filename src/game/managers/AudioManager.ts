@@ -15,8 +15,6 @@ export class AudioManager<T extends string> {
             .setLoop(false)
             .setVolume(1);
 
-        console.log("refDistance", distance);
-
         audio.setRefDistance(100 / distance);
         audio.play();
     }

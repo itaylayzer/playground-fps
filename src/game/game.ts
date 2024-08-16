@@ -3,17 +3,20 @@ import setupWorld from "./api/setup/world";
 import { Global } from "./store/Global";
 import { LocalPlayer } from "./player/LocalPlayer";
 import { PhysicsObject } from "./physics/PhysicsMesh";
-import { Clock } from "three";
-import Nebula from "three-nebula";
+import * as THREE from "three";
+import System from "three-nebula";
+
 
 export default (assets: loadedAssets) => {
     Global.assets = assets;
 
     setupWorld();
 
+    Global.system = new System();
+
     Global.localPlayer = new LocalPlayer();
 
-    const clock = new Clock();
+    const clock = new THREE.Clock();
     Global.lockController.lock();
 
     const animate = () => {
@@ -23,6 +26,7 @@ export default (assets: loadedAssets) => {
             .concat(PhysicsObject.childrens.flatMap(v => v.update))
             .map(fn => fn());
 
+        Global.system.update();
         Global.renderer.render(Global.scene, Global.camera);
         Global.world.step(2.6 * Global.deltaTime);
 

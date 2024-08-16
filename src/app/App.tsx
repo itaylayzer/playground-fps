@@ -138,7 +138,8 @@ export default () => (
             // sfx_throw:"https://soxundbible.com/mp3/kung_fu_punch-Mike_Koenig-2097967259.mp3"
             sfx_throw: "sfx/throw.mp3",
             sfx_exp: "sfx/exp.mp3",
-            sfx_shoot: "sfx/shoot.mp3"
+            sfx_shoot: "sfx/shoot.mp3",
+            txt_circle:"textures/circle.png",
         }}
     >
         <App />

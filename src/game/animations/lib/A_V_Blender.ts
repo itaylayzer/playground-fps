@@ -16,8 +16,7 @@ export class A_V_Blender extends A_Vertex {
     for (const [actionIndex, action] of this.actions.entries()) {
       action.play();
       action.setEffectiveWeight(+(actionIndex == 0));
-      // @ts-ignore
-      console.log("action._iterpolants", action._iterpolants);
+
     }
     this.index = 0;
 

@@ -11,6 +11,7 @@ import { Action } from "@/src/hooks/useDestroy";
 import { PointerLockControls } from "three/examples/jsm/Addons.js";
 import { LocalPlayer } from "../player/LocalPlayer";
 import { AudioManager } from "../managers/AudioManager";
+import System from "three-nebula";
 
 export class Global {
   public static keyboardController: KeyboardController;
@@ -29,4 +30,5 @@ export class Global {
   public static lockController: PointerLockControls;
   public static localPlayer: LocalPlayer;
   public static audioManager: AudioManager<"throw" | "exp" | "shoot">;
+  public static system:System
 }
