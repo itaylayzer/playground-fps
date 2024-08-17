@@ -32,12 +32,13 @@ export class LocalPlayer extends Player {
 
         const update = () => {
             let isShooting = false;
+            let isThrowing = false;
             Global.lockController.isLocked &&
                 Global.cameraController.updateMouseMovement(
                     Global.mouseController.movement[0] * Global.deltaTime,
                     Global.mouseController.movement[1] * Global.deltaTime
                 );
-             movementController.update(group);
+            movementController.update(group);
 
             Global.cameraController.update();
 
@@ -50,16 +51,24 @@ export class LocalPlayer extends Player {
                 Global.lockController.isLocked &&
                 Global.keyboardController.isKeyUp("KeyE")
             ) {
-                throwController.throw();
+                isThrowing = throwController.throw();
                 Global.audioManager.play("throw");
             }
 
+            if (
+                Global.lockController.isLocked &&
+                Global.keyboardController.isKeyDown("KeyR")
+            ) {
+                shooterController.reload();
+                throwController.reload();
+            }
             Global.lockController.isLocked && shooterController.update();
 
             model.update(
                 movementController.jumped,
                 movementController.onGroundController.onGround,
-                isShooting
+                isShooting,
+                isThrowing
             );
         };
 

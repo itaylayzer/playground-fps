@@ -33,7 +33,8 @@ export class PlayerModel {
     public update: (
         onJump: boolean,
         grounded: boolean,
-        onShooting: boolean
+        onShooting: boolean,
+        onThrowing: boolean
     ) => void;
     public getBone: (name: string) => THREE.Bone | undefined;
     constructor(body: CANNON.Body) {
@@ -132,7 +133,8 @@ export class PlayerModel {
         this.update = (
             onJump: boolean,
             grounded: boolean,
-            onShooting: boolean
+            onShooting: boolean,
+            onThrowing: boolean
         ) => {
             mesh.quaternion.copy(body.quaternion);
 
@@ -155,9 +157,7 @@ export class PlayerModel {
 
             const higherConditions: A_Conditions = {
                 d: _ => {
-                    const b =
-                        Global.keyboardController.isKeyUp("KeyE") &&
-                        Global.lockController.isLocked;
+                    const b = onThrowing && Global.lockController.isLocked;
 
                     return b;
                 },

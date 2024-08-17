@@ -1,7 +1,13 @@
-import { GoDotFill } from "react-icons/go";
 import AssetLoader from "../components/AssetLoader";
 import { useStyles } from "../hooks/useStyles";
 import { useApScreens } from "../viewmodels";
+import { GiHeavyBullets } from "react-icons/gi";
+import { TbBombFilled } from "react-icons/tb";
+import { RxCross2 } from "react-icons/rx";
+
+const gold = "#fcd56e";
+const blue = "#2ea4ff";
+const fontWeight = 800;
 
 function App() {
     useApScreens();
@@ -10,7 +16,87 @@ function App() {
         <>
             <div style={styles.gameContainer} className="gameContainer">
                 <div style={styles.dot}>
-                    <GoDotFill color="white" size={10} />
+                    <RxCross2
+                        color="white"
+                        size={30}
+                        style={{ rotate: "45deg" }}
+                    />
+                </div>
+            </div>
+            <div style={styles.ui}>
+                <div
+                    style={{
+                        position: "absolute",
+                        bottom: 5,
+                        left: "50%",
+                        translate: "-50% 0"
+                    }}
+                >
+                    <div style={{ display: "flex", opacity: 0.7 }}>
+                        <div style={{ ...styles.boxw, direction: "rtl" }}>
+                            <p
+                                style={{
+                                    ...styles.num2,
+                                    color: gold,
+
+                                    filter: `drop-shadow(0 0 0.25rem ${gold})`
+                                }}
+                            >
+                                100
+                            </p>
+                            <p
+                                style={{
+                                    ...styles.num2,
+
+                                    filter: `drop-shadow(0 0 0.25rem ${blue})`
+                                }}
+                            >
+                                100
+                            </p>
+                        </div>
+
+                        <div
+                            style={{
+                                height: 2,
+                                width: 500,
+                                marginBlock: "auto",
+                                marginInline: 10,
+                                background: gold,
+                                backgroundColor: gold,
+                                color: gold,
+                                display: "block"
+                            }}
+                        ></div>
+                        <div style={styles.box}>
+                            <p color={gold} style={styles.num1} id="ammo-gun">
+                                1
+                            </p>
+                            <p color={gold} style={styles.num} id="ammo-clip">
+                                | 2
+                            </p>
+                            <GiHeavyBullets
+                                style={{
+                                    marginBlock: "auto",
+                                    marginLeft: 5,
+                                    rotate: "-90deg"
+                                }}
+                                size={30}
+                                color={gold}
+                            />
+
+                            <p color={gold} style={styles.num} id="bomb-ammo">
+                                1
+                            </p>
+                            <TbBombFilled
+                                style={{
+                                    marginBlock: "auto",
+                                    marginRight: 5
+                                }}
+                                size={30}
+                                color={gold}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         </>
@@ -26,35 +112,6 @@ const styles = useStyles({
         left: 0,
         top: 0
     },
-    header: {
-        zIndex: 2,
-        color: "white",
-        fontSize: 16,
-        position: "absolute",
-        boxSizing: "border-box",
-        display: "block",
-        top: 0,
-        left: 0,
-        fontFamily: "monospace",
-        textAlign: "center",
-        width: "100%"
-    },
-    href: {
-        color: "rgb(41, 131, 255)"
-    },
-    container: {
-        display: "flex",
-        position: "absolute",
-        boxSizing: "border-box",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        minHeight: "100%",
-        minWidth: "100%",
-        justifyContent: "center",
-        flexDirection: "row-reverse"
-    },
 
     dot: {
         position: "absolute",
@@ -62,62 +119,51 @@ const styles = useStyles({
         left: "50%",
         translate: "-50% -50%"
     },
+
     ui: {
         position: "absolute",
         top: 0,
         left: 0,
         width: "100%",
-        height: "100%",
-        zIndex: 3,
-        pointerEvents: "none"
+        height: "100%"
     },
-    swords: {
-        position: "absolute",
-        bottom: 50,
-        left: 80,
-        width: 250,
-        backgroundColor: "#080808",
-        rotate: "-2deg",
-        display: "flex",
-        justifyContent: "space-around"
+    num: {
+        fontSize: 30,
+        fontFamily: `"Lexend", sans-serif`,
+        fontWeight,
+        fontStyle: "normal",
+        marginBlock: "auto",
+        display: "block",
+        color: gold
     },
-    speakingIcon: {
-        position: "absolute",
-        bottom: 50,
-        left: 25,
-        rotate: "-2deg",
-        transition: ".3s opacity, scale .3s",
-        scale: "0.9",
-        opacity: "0"
+    num1: {
+        fontSize: 40,
+        fontFamily: `"Lexend", sans-serif`,
+        fontWeight,
+        fontStyle: "normal",
+        marginBlock: 0,
+        marginRight: 15,
+        display: "block",
+        color: gold
     },
-    doesSpeak: {
-        scale: "1",
-        opacity: "1"
+    box: {
+        filter: `drop-shadow(0 0 0.25rem ${gold})`,
+        minWidth: 100,
+        display: "flex"
     },
-    guns: {
-        position: "absolute",
-        bottom: 50,
-        right: 50,
-        width: 300,
-        backgroundColor: "#080808",
-        rotate: "2deg",
-        display: "flex",
-        justifyContent: "space-around",
-        flexDirection: "row-reverse"
+    boxw: {
+        minWidth: 100,
+        display: "flex"
     },
-    selectb: {
-        background: "rgb(0,0,0,0)",
-        border: 0,
-        outline: 0,
-        padding: 10,
-        paddingInline: 20,
-        transition: "opacity .3s, scale .3s",
-        scale: "0.6",
-        opacity: "0.2"
-    },
-    seletbselected: {
-        scale: "1",
-        opacity: "1"
+    num2: {
+        fontSize: 40,
+        fontFamily: `"Lexend", sans-serif`,
+        fontWeight,
+        fontStyle: "normal",
+        marginBlock: 0,
+        marginRight: 15,
+        display: "block",
+        color: blue
     }
 });
 
@@ -139,7 +185,7 @@ export default () => (
             sfx_throw: "sfx/throw.mp3",
             sfx_exp: "sfx/exp.mp3",
             sfx_shoot: "sfx/shoot.mp3",
-            txt_circle:"textures/circle.png",
+            txt_circle: "textures/circle.png"
         }}
     >
         <App />
