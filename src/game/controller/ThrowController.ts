@@ -16,7 +16,6 @@ import {
     Alpha,
     Scale,
     Color,
-    
     RadialVelocity,
     ease,
     ColorSpan,
@@ -64,13 +63,15 @@ class ThrowBomb extends PhysicsObject {
         this.exploded = true;
         Global.audioManager.playAt(
             "exp",
-            Math.sqrt(this.position.distanceTo(LocalPlayer.getInstance().position))
+            Math.sqrt(
+                this.position.distanceTo(LocalPlayer.getInstance().position)
+            )
         );
         Global.scene.remove(shpere);
         Global.world.removeBody(this);
 
         let playerDistance = 0;
-        Global.world.bodies.forEach(body => {
+        Global.world.bodies.forEach((body) => {
             // add force here
             if (body.id == this.id) return;
 
@@ -81,11 +82,12 @@ class ThrowBomb extends PhysicsObject {
             const distance = body.position.distanceTo(this.position);
 
             if (distance > 0) {
-                const forceMagnitude = explosionForce / distance; // Decrease force with distance
+                let forceMagnitude = explosionForce / distance; // Decrease force with distance
 
                 if (body.collisionFilterGroup === 1) {
                     playerDistance = distance;
-                    return;
+                    if (!LocalPlayer.getInstance().forceMovement) return;
+                    forceMagnitude *= 0.05;
                 }
                 const force = directionToBody.scale(forceMagnitude);
                 body.applyForce(force);
@@ -118,7 +120,7 @@ class ThrowBomb extends PhysicsObject {
                 ),
 
                 new Texture(THREE, Global.assets.textures.txt_circle, {
-                    blending: "AdditiveBlending"
+                    blending: THREE.NormalBlending
                 })
             ])
             .setBehaviours([

@@ -4,7 +4,7 @@ import { Global } from "../store/Global";
 export class AudioManager<T extends string> {
     private listener: AudioListener;
     constructor(private audios: Record<T, AudioBuffer>) {
-        this.listener = new AudioListener().setMasterVolume(1);
+        this.listener = new AudioListener().setMasterVolume(0.5);
 
         Global.camera.add(this.listener);
     }
@@ -24,5 +24,9 @@ export class AudioManager<T extends string> {
             .setLoop(false)
             .setVolume(1)
             .play();
+    }
+
+    public setMasterVolume(vol: number) {
+        this.listener.setMasterVolume(vol);
     }
 }

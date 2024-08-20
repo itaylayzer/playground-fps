@@ -15,15 +15,33 @@ export class MouseController {
     }
 
     public enable() {
-        window.addEventListener("mousemove", this.onMouseMove.bind(this));
-        window.addEventListener("mousedown", this.onMouseDown.bind(this));
-        window.addEventListener("mouseup", this.onMouseUp.bind(this));
+        Global.renderer.domElement.addEventListener(
+            "mousemove",
+            this.onMouseMove.bind(this)
+        );
+        Global.renderer.domElement.addEventListener(
+            "mousedown",
+            this.onMouseDown.bind(this)
+        );
+        Global.renderer.domElement.addEventListener(
+            "mouseup",
+            this.onMouseUp.bind(this)
+        );
     }
 
     public disable() {
-        window.removeEventListener("mousemove", this.onMouseMove.bind(this));
-        window.removeEventListener("mousedown", this.onMouseDown.bind(this));
-        window.removeEventListener("mouseup", this.onMouseUp.bind(this));
+        Global.renderer.domElement.removeEventListener(
+            "mousemove",
+            this.onMouseMove.bind(this)
+        );
+        Global.renderer.domElement.removeEventListener(
+            "mousedown",
+            this.onMouseDown.bind(this)
+        );
+        Global.renderer.domElement.removeEventListener(
+            "mouseup",
+            this.onMouseUp.bind(this)
+        );
     }
 
     private onMouseMove(event: MouseEvent) {

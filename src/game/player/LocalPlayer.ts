@@ -8,12 +8,17 @@ import { ThrowController } from "../controller/ThrowController";
 
 export class LocalPlayer extends Player {
     private static instance: LocalPlayer;
+    public forceMovement: boolean;
+    setCameraAddon: any;
+    cameraAddon: THREE.Vector3;
     static getInstance() {
         return this.instance;
     }
     constructor() {
         const group = new THREE.Group();
         super(group);
+        this.forceMovement = false;
+        this.cameraAddon = new THREE.Vector3();
         LocalPlayer.instance = this;
 
         const movementController = new MovementController(5, this);
@@ -37,7 +42,7 @@ export class LocalPlayer extends Player {
                     Global.mouseController.movement[0] * Global.deltaTime,
                     Global.mouseController.movement[1] * Global.deltaTime
                 );
-             movementController.update(group);
+            movementController.update(group, this.forceMovement);
 
             Global.cameraController.update();
 
@@ -57,6 +62,7 @@ export class LocalPlayer extends Player {
             Global.lockController.isLocked && shooterController.update();
 
             model.update(
+                this.cameraAddon,
                 movementController.jumped,
                 movementController.onGroundController.onGround,
                 isShooting

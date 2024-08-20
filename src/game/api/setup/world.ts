@@ -14,6 +14,10 @@ import Stats from "three/examples/jsm/libs/stats.module.js";
 import { HighlightedArea } from "../meshes/HighiltedArea";
 import { PointerLockControls } from "three/examples/jsm/Addons.js";
 import { AudioManager } from "../../managers/AudioManager";
+import { LocalPlayer } from "../../player/LocalPlayer";
+import Dat from "dat.gui";
+import init from "three-dat.gui";
+init(Dat);
 
 function setupLights() {
     // createLight(
@@ -159,18 +163,9 @@ function setupManagers() {
 }
 
 function setupWindowEvents() {
-    Global.container.addEventListener("contextmenu", event => {
+    Global.container.addEventListener("contextmenu", (event) => {
         event.preventDefault();
     });
-    // addEventListener(
-    //     "beforeunload",
-    //     function(e) {
-    //         e.stopPropagation();
-    //         e.preventDefault();
-    //         return false;
-    //     },
-    //     true
-    // );
 
     window.addEventListener("resize", () => {
         Global.camera.aspect = window.innerWidth / window.innerHeight;
@@ -185,95 +180,39 @@ function setupStats() {
     document.body.appendChild(Global.stats.dom);
 }
 
-// function setupMap() {
-//     const map = Global.assets.gltf.map.scene;
-//     map.scale.multiplyScalar(3);
-//     Global.scene.add(map);
+function setupDat() {
+    const gui = new Dat.GUI();
 
-//     // // Assuming 'mesh' is your Three.js mesh
-//     // const position = new THREE.Vector3();
-//     // const quaternion = new THREE.Quaternion();
-//     // const scale = new THREE.Vector3();
+    const obj = {
+        "master volume": 0.5,
+        "force movement": false,
+        camera: new THREE.Vector3()
+    };
 
-//     // map.matrixWorld.decompose(position, quaternion, scale);
+    gui.add(obj, "master volume", 0, 1, 0.01).onFinishChange(() => {
+        Global.audioManager.setMasterVolume(obj["master volume"]);
+    });
 
-//     // const body = new CANNON.Body({ mass: 0 }); // Static object
+    gui.add(obj, "force movement").onFinishChange((v) => {
+        LocalPlayer.getInstance().forceMovement = v;
+        console.log(
+            "LocalPlayer.getInstance().forceMovement",
+            LocalPlayer.getInstance().forceMovement
+        );
+    });
 
-//     // // create a body
-//     // map.traverse((child) => {
-//     //     // @ts-ignore
-//     //     if (child.isMesh) {
-//     //         const mesh: THREE.Mesh = child as THREE.Mesh;
-//     //         const shape = createTrimesh(mesh.geometry);
-//     //         shape.scale.scale(2.825, shape.scale);
+    gui.addVector("camera", LocalPlayer.getInstance().cameraAddon);
+}
 
-//     //         shape.updateNormals();
-//     //         shape.updateAABB();
-//     //         shape.updateBoundingSphereRadius();
-
-//     //         body.addShape(shape);
-//     //     }
-//     // });
-//     // // Apply position
-//     // body.position.set(position.x, position.y, position.z);
-
-//     // // Apply rotation
-//     // body.quaternion.setFromEuler(-Math.PI / 2, 0, 0)
-
-//     // // body
-//     // body.updateAABB();
-//     // body.updateBoundingRadius();
-
-//     // // Add body to your world
-//     // Global.world.addBody(body);
-
-//     map.traverse(child => {
-//         // @ts-ignore
-//         if (child.isMesh) {
-//             const mesh = child;
-
-//             // Extract transformations
-//             const position = new THREE.Vector3();
-//             const quaternion = new THREE.Quaternion();
-//             const scale = new THREE.Vector3();
-//             mesh.matrixWorld.decompose(position, quaternion, scale);
-
-//             // Create the Cannon.js body
-//             // @ts-ignore
-//             const shape = CannonUtils.CreateTriMesh(mesh);
-//             const body = new CANNON.Body({ mass: 0 }); // Static object
-//             console.log("body.id", body.id);
-
-//             // Apply position and rotation
-//             body.position.set(position.x, position.y, position.z);
-//             body.quaternion.set(
-//                 quaternion.x,
-//                 quaternion.y,
-//                 quaternion.z,
-//                 quaternion.w
-//             );
-
-//             shape.scale.scale(0.225 / 2, shape.scale);
-
-//             body.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-
-//             body.addShape(shape);
-//             // mesh.body = body;
-
-//             // Add body to your world
-//             Global.world.addBody(body);
-//         }
-//     });
-// }
-
-export default function() {
+export default function () {
     setupScene();
     setupPhysicsWorld();
     setupLights();
     setupObjects();
-    // setupMap();
     setupControllers();
     setupManagers();
     setupWindowEvents();
     setupStats();
+    Global.localPlayer = new LocalPlayer();
+    setupDat();
 }

@@ -13,6 +13,16 @@ function App() {
                     <GoDotFill color="white" size={10} />
                 </div>
             </div>
+            <p style={styles.header}>
+                playground | fps -{" "}
+                <a style={styles.href} href="http://itaylayzer.github.io/">
+                    itay layzer
+                </a>
+                <br />
+                move with A,S,D,W. throw with E
+                <br />
+                shoot with mouse 0. unlock with Escape
+            </p>
         </>
     );
 }
@@ -34,10 +44,11 @@ const styles = useStyles({
         boxSizing: "border-box",
         display: "block",
         top: 0,
-        left: 0,
+        left: "50%",
         fontFamily: "monospace",
         textAlign: "center",
-        width: "100%"
+        translate: "-50% 0%",
+        width: "fit-content"
     },
     href: {
         color: "rgb(41, 131, 255)"
@@ -139,7 +150,7 @@ export default () => (
             sfx_throw: "sfx/throw.mp3",
             sfx_exp: "sfx/exp.mp3",
             sfx_shoot: "sfx/shoot.mp3",
-            txt_circle:"textures/circle.png",
+            txt_circle: "textures/circle.png"
         }}
     >
         <App />

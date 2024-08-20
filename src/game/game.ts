@@ -1,7 +1,6 @@
 import { loadedAssets } from "../viewmodels/useAssetLoader";
 import setupWorld from "./api/setup/world";
 import { Global } from "./store/Global";
-import { LocalPlayer } from "./player/LocalPlayer";
 import { PhysicsObject } from "./physics/PhysicsMesh";
 import * as THREE from "three";
 import System, { SpriteRenderer } from "three-nebula";
@@ -15,8 +14,6 @@ export default (assets: loadedAssets) => {
     Global.system = new System();
     Global.system.addRenderer(renderer);
 
-    Global.localPlayer = new LocalPlayer();
-
     const clock = new THREE.Clock();
     Global.lockController.lock();
 
@@ -24,8 +21,8 @@ export default (assets: loadedAssets) => {
         Global.deltaTime = clock.getDelta();
 
         Global.updates
-            .concat(PhysicsObject.childrens.flatMap(v => v.update))
-            .map(fn => fn());
+            .concat(PhysicsObject.childrens.flatMap((v) => v.update))
+            .map((fn) => fn());
 
         Global.system.update();
         Global.renderer.render(Global.scene, Global.camera);

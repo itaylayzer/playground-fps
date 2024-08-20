@@ -17,20 +17,24 @@ export class MovementController {
     constructor(private speed: number = 1, private body: CANNON.Body) {
         this.onGroundController = new OnGroundController(this.body);
 
-        this.keysAxis = [[0, 0], [0, 0]];
+        this.keysAxis = [
+            [0, 0],
+            [0, 0]
+        ];
     }
 
-    update(group: THREE.Group) {
+    update(group: THREE.Group, forceMovement: boolean) {
         this.jumped = false;
         const onGround = this.onGroundController.onGround;
-        // const airControl = 0.01;
 
         if (
             (Global.keyboardController.isKeyPressed("Space") ||
                 Global.keyboardController.isKeyDown("Space")) &&
             onGround
         ) {
-            onGround && ((this.body.velocity.y = 11), (this.jumped = true));
+            onGround &&
+                ((this.body.velocity.y = forceMovement ? 15 : 11),
+                (this.jumped = true));
             this.onGroundController.off();
         }
 
@@ -42,9 +46,8 @@ export class MovementController {
             +Global.keyboardController.isKeyPressed("KeyA");
 
         const isShifting = Global.keyboardController.isKeyPressed("ShiftLeft");
-        const isControling = Global.keyboardController.isKeyPressed(
-            "ControlLeft"
-        );
+        const isControling =
+            Global.keyboardController.isKeyPressed("ControlLeft");
 
         for (let index = 0; index < 2; index++) {
             this.keysAxis[LERPED_AXIS][index] = lerp(
@@ -72,6 +75,9 @@ export class MovementController {
                 new CANNON.Vec3(Math.sin(yRotation), 0, Math.cos(yRotation))
             );
 
+        const mX = this.body.velocity.dot(rightVector);
+        const mY = this.body.velocity.dot(forwardVector);
+
         forwardVector.scale(
             this.keysAxis[LERPED_AXIS][VERTICAL],
             forwardVector
@@ -92,13 +98,34 @@ export class MovementController {
             this.speed * (0.5 + 0.5 * +(!isShifting && !isControling)),
             direction
         );
-        // const airDirection = new CANNON.Vec3(direction.x, 0, direction.z).scale(airControl);
 
-        // if (onGround) {
-        this.body.velocity.set(direction.x, this.body.velocity.y, direction.z);
-        // }
-        // else {
-        //     this.body.velocity.vadd(airDirection, this.body.velocity);
-        // }
+        if (!forceMovement) {
+            this.body.velocity.set(
+                direction.x,
+                this.body.velocity.y,
+                direction.z
+            );
+            this.body.linearDamping = 0;
+
+            return;
+        }
+
+        if (mX > this.speed) {
+            rightVector.scale(0, rightVector);
+        }
+        if (mY > this.speed) {
+            forwardVector.scale(0, forwardVector);
+        }
+
+        this.body.linearDamping = onGround ? 0.9 : 0.1;
+
+        if (!onGround) {
+            forwardVector.scale(2, forwardVector);
+            rightVector.scale(2, rightVector);
+        }
+
+        this.body.velocity.copy(
+            this.body.velocity.vadd(rightVector).vadd(forwardVector)
+        );
     }
 }

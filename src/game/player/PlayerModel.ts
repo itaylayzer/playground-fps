@@ -31,6 +31,7 @@ import {
 
 export class PlayerModel {
     public update: (
+        cameraAddon: THREE.Vector3,
         onJump: boolean,
         grounded: boolean,
         onShooting: boolean
@@ -60,7 +61,7 @@ export class PlayerModel {
             )
         );
 
-        this.getBone = name => skinnedMesh.skeleton.getBoneByName(name);
+        this.getBone = (name) => skinnedMesh.skeleton.getBoneByName(name);
 
         lgraph.addVertex(new A_P_Single(Global.assets.fbx.jup.animations[0]));
         lgraph.addVertex(new A_P_Single(Global.assets.fbx.jloop.animations[0]));
@@ -70,8 +71,7 @@ export class PlayerModel {
 
         lgraph.join(0, 1, "mj1");
         lgraph.join(1, 2, "end");
-        lgraph.join(2, 3, "mj2");
-        lgraph.join(3, 0, "end");
+        lgraph.join(2, 0, "mj2");
 
         lgraph.start(0);
 
@@ -124,12 +124,13 @@ export class PlayerModel {
 
         let lerypedY = 0;
 
-        hgraph.addEventListener("fire", index => {
+        hgraph.addEventListener("fire", (index) => {
             const throwed = index === 1;
             rifle.visible = !throwed;
         });
 
         this.update = (
+            cameraAddon,
             onJump: boolean,
             grounded: boolean,
             onShooting: boolean
@@ -143,25 +144,25 @@ export class PlayerModel {
             const lowerConditions: A_Conditions = {
                 mj1: onJump,
                 mj2: grounded,
-                wait1: clip => {
+                wait1: (clip) => {
                     return (
                         clip.getTime() >= Global.deltaTime * 5 &&
                         !Global.mouseController.isMousePressed(0)
                     );
                 },
-                end: clip =>
+                end: (clip) =>
                     clip.getTime() >= clip.getDuration() - Global.deltaTime * 5
             };
 
             const higherConditions: A_Conditions = {
-                d: _ => {
+                d: (_) => {
                     const b =
                         Global.keyboardController.isKeyUp("KeyE") &&
                         Global.lockController.isLocked;
 
                     return b;
                 },
-                e: clip => {
+                e: (clip) => {
                     return (
                         clip.getTime() + Global.deltaTime >= clip.getDuration()
                     );
@@ -189,11 +190,16 @@ export class PlayerModel {
                 .copy(nose.getWorldPosition(new THREE.Vector3()))
                 .add(body.quaternion.vmult(new CANNON.Vec3(0, 0, 0)))
                 .add(
-                    new THREE.Vector3(
-                        0,
-                        clamp(-lerypedY / 200, -0.1, 0.1),
-                        0
-                    ).applyQuaternion(Global.camera.quaternion)
+                    cameraAddon
+                        .clone()
+                        .add(
+                            new THREE.Vector3(
+                                0,
+                                clamp(-lerypedY / 200, -0.1, 0.1),
+                                0
+                            )
+                        )
+                        .applyQuaternion(Global.camera.quaternion)
                 );
 
             fitWeaponToHands(
@@ -240,7 +246,7 @@ export class PlayerModel {
                                 THREE,
                                 Global.assets.textures.txt_circle,
                                 {
-                                    blending: "AdditiveBlending"
+                                    blending: THREE.NormalBlending
                                 }
                             )
                         ])
