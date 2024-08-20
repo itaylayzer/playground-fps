@@ -114,7 +114,7 @@ class ThrowBomb extends PhysicsObject {
 
                 new RadialVelocity(
                     // @ts-ignore
-                    new Span(5, 10),
+                    new Span(1, 10),
                     new Vector3D(0, 1, 0),
                     90
                 ),
@@ -152,9 +152,21 @@ class ThrowBomb extends PhysicsObject {
 }
 
 export class ThrowController {
-    public throw: () => void;
-    constructor(bone: THREE.Bone) {
+    public throw: () => boolean;
+    public reload: () => void;
+    constructor(bone: THREE.Bone, private ammo = 7) {
+        const bombAmmo = document.getElementById("bomb-ammo")!;
+        const updateText = () => (bombAmmo.innerHTML = this.ammo.toString());
+
+        updateText();
+        this.reload = () => {
+            this.ammo = 7;
+            updateText();
+        };
         this.throw = () => {
+            if (this.ammo <= 0) return false;
+            this.ammo--;
+            updateText();
             new ThrowBomb(
                 new CANNON.Vec3().copy(
                     // @ts-ignore
@@ -169,6 +181,7 @@ export class ThrowController {
                     )
                     .vmult(new CANNON.Vec3(0, 0, 1), new CANNON.Vec3())
             );
+            return true;
         };
     }
 }
